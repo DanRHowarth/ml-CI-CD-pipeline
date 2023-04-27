@@ -4,3 +4,5 @@
 /.idea/inspectionProfiles/profiles_settings.xml
 /.idea/vcs.xml
 /.idea/.gitignore
+/src/tests/.pytest_cache/README.md
+/src/tests/.pytest_cache/.gitignore

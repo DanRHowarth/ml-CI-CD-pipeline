@@ -49,4 +49,3 @@ dump(trained_model, path / 'models' / 'random_forest.joblib')
 
 slice_data = assess_data_slices(test, encoder, lb, rf, cat_features)
 
-print(slice_data)
