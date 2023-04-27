@@ -1,15 +1,16 @@
 # Script to train machine learning model.
-
+from pathlib import Path
 from sklearn.model_selection import train_test_split
-from sklearn.ensemble import RandomForestRegressor
+from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
+from joblib import dump
 from ml.data import process_data
-from ml.model import train_model
+from ml.model import train_model, compute_model_metrics, inference, assess_data_slices
 
-# Add the necessary imports for the starter code.
+path = Path.cwd().parent
 
 # Add code to load in the data.
-data = pd.read_csv('data/census.csv') # /Users/drh/Documents/Repos/nd0821-c3-project/
+data = pd.read_csv(path / 'data' / 'census.csv')
 
 # Optional enhancement, use K-fold cross validation instead of a train-test split.
 train, test = train_test_split(data, test_size=0.20)
@@ -35,6 +36,22 @@ X_test, y_test, _, _ = process_data(
 
 # Train and save a model.
 
-rf = RandomForestRegressor()
+rf = RandomForestClassifier()
 
 trained_model = train_model(rf, X_train, y_train)
+
+preds = inference(trained_model, X_test)
+
+precision, recall, fbeta = compute_model_metrics(y_test, preds)
+
+print(precision, recall, fbeta)
+
+# save the model
+dump(trained_model, path / 'models' / 'random_forest.joblib')
+
+print(y_test.shape)
+print(y_test)
+
+slice_data = assess_data_slices(X_test, preds, y_test, cat_features)
+
+print(slice_data)

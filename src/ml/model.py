@@ -1,3 +1,5 @@
+import pandas as pd
+import numpy as np
 from sklearn.metrics import fbeta_score, precision_score, recall_score
 
 
@@ -59,3 +61,35 @@ def inference(model, X):
         Predictions from the model.
     """
     return model.predict(X)
+
+
+def assess_data_slices(X_test: pd.DataFrame, preds: np.array, y: np.array, cat_features: list):
+    test_df = X_test
+    # y = np.expand_dims(y, axis=0)
+    y = y.astype(int)
+    test_df['y'] = y
+    test_df['preds'] = preds
+
+    cat = []
+    sub_cat = []
+    precision = []
+    recall = []
+    fbeta = []
+
+    for cat in cat_features:
+        for sub_cat in df[cat].unique():
+            preds = df['preds'][df[cat] == sub_cat]
+            y = df['y'][df[cat] == sub_cat]
+            precision, recall, fbeta = compute_model_metrics(y, preds)
+
+            cat.append(cat)
+            sub_cat.append(sub_cat)
+            precision.append(precision)
+            recall.append(recall)
+            fbeta.append(fbeta)
+
+    slice_data = {'category': cat, 'sub_Category': sub_cat, 'precision': precision, 'recall': recall, 'fbeta': fbeta}
+
+    slice_df = pd.DataFrame(slice_data)
+
+    return slice_df
