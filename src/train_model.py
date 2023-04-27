@@ -44,14 +44,9 @@ preds = inference(trained_model, X_test)
 
 precision, recall, fbeta = compute_model_metrics(y_test, preds)
 
-print(precision, recall, fbeta)
-
 # save the model
 dump(trained_model, path / 'models' / 'random_forest.joblib')
 
-print(y_test.shape)
-print(y_test)
-
-slice_data = assess_data_slices(X_test, preds, y_test, cat_features)
+slice_data = assess_data_slices(test, encoder, lb, rf, cat_features)
 
 print(slice_data)
