@@ -1,34 +1,30 @@
 # Model Card
 
 ## Model Details
+Dan Howarth created the model. It is a Random Forest Classifier using the default hyperparameters in scikit-learn 0.24.2. 
 
 ## Intended Use
+This model should be used to predict a salary for an individual given socio-economic and job related data about that 
+individual. The users for this model could be employment agencies, recruiters, HR departments looking to set salaries,
+or social scientists undertaking research.
 
 ## Training Data
+The data is 1994 Census data, avialbe online here - https://archive.ics.uci.edu/ml/datasets/census+income
 
 ## Evaluation Data
+The model was evaluated on an unseen test set of the original data. It was evaluated on the full dataset, and on slices
+of the data to detect for bias. 
 
 ## Metrics
-_Please include the metrics used and your model's performance on those metrics._
+The model was assessed using Precision, Recall and Fbeta scores, and scores as follows:
+- Precision: .7419
+- Recall 0.6257 
+- Fbeta: 0.6789
 
 ## Ethical Considerations
+The data contains socio-economic information that needs to be handled sensitively. The model could be used to predict
+salary information about individuals and this should be discouraged. 
 
 ## Caveats and Recommendations
-
-
-Model Details
-Justin C Smith created the model. It is logistic regression using the default hyperparameters in scikit-learn 0.24.2.
-
-Intended Use
-This model should be used to predict the acceptability of a car based off a handful of attributes. The users are prospective car buyers.
-
-Metrics
-The model was evaluated using F1 score. The value is 0.8960.
-
-Data
-The data was obtained from the UCI Machine Learning Repository (https://archive.ics.uci.edu/ml/datasets/Car+Evaluation). The target class was modified from four categories down to two: "unacc" and "acc", where "good" and "vgood" were mapped to "acc".
-
-The original data set has 1728 rows, and a 75-25 split was used to break this into a train and test set. No stratification was done. To use the data for training a One Hot Encoder was used on the features and a label binarizer was used on the labels.
-
-Bias
-According to Aequitas bias is present at the unsupervised and supervised level. This implies an unfairness in the underlying data and also unfairness in the model. From Aequitas summary plot we see bias is present in only some of the features and is not consistent across metrics.
+THe data used to trained the model is from 1994 and is therefore nearly 30 years old. Please interpet any model results
+accordingly.
