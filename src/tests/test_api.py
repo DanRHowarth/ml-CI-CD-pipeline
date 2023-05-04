@@ -17,10 +17,22 @@ predict_zero = {'age': 38,
                 'hours-per-week': 40,
                 'native-country': 'United-States'}
 
-predict_one = {}
+predict_one = {'age': 52,
+               'workclass': 'Self-emp-not-inc',
+               'fnlgt': 209642,
+               'education': 'HS-grad',
+               'education-num': 9,
+               'marital-status': 'Married-civ-spouse',
+               'occupation': 'Exec-managerial',
+               'relationship': 'Husband',
+               'race': 'White',
+               'sex': 'Male',
+               'capital-gain': 0,
+               'capital-loss': 0,
+               'hours-per-week': 45,
+               'native-country': 'United-States'}
 
 client = TestClient(app)
-
 
 def test_say_hello():
     request = client.get("/")
@@ -29,11 +41,9 @@ def test_say_hello():
 
 def test_create_item():
     request = client.post("/prediction/", json=predict_zero)
-    # post a body
     assert request.status_code == 200
-    assert request.contet == '{"prediction:": 0}'
+    assert request.content == b'{"prediction:":0}'
 
     request = client.post("/prediction/", json=predict_one)
-    # post a body
     assert request.status_code == 200
-    assert request.contet == '{"prediction:": 1}'
+    assert request.content == '{"prediction:": 1}'
