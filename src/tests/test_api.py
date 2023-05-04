@@ -36,14 +36,14 @@ client = TestClient(app)
 
 def test_say_hello():
     request = client.get("/")
-    assert request.status_code == 200
+    assert request.status_code == 200, f'Status code {request.status_code} returned instead of 200'
 
 
 def test_create_item():
     request = client.post("/prediction/", json=predict_zero)
-    assert request.status_code == 200
-    assert request.content == b'{"prediction:":0}'
+    assert request.status_code == 200, f'Status code {request.status_code} returned instead of 200'
+    assert request.content == b'{"prediction:":0}', f'{request.content} returned instead of 0'
 
     request = client.post("/prediction/", json=predict_one)
-    assert request.status_code == 200
-    assert request.content == '{"prediction:": 1}'
+    assert request.status_code == 200, f'Status code {request.status_code} returned instead of 200'
+    assert request.content == b'{"prediction:": 1}', f'{request.content} returned instead of 1'

@@ -4,23 +4,15 @@ from sklearn.model_selection import train_test_split
 from src.ml.data import process_data
 from src.ml.model import train_model, compute_model_metrics, inference
 from sklearn.ensemble import RandomForestClassifier
+from config import path, cat_features
 
 # Import data and set up variables for testing
-path = Path.cwd().parent.parent
+# path = Path.cwd().parent.parent
 data = pd.read_csv(path / 'data' / 'census.csv')
 
 train, test = train_test_split(data, test_size=0.20)
 
-cat_features = [
-    "workclass",
-    "education",
-    "marital-status",
-    "occupation",
-    "relationship",
-    "race",
-    "sex",
-    "native-country",
-]
+
 X_train, y_train, encoder, lb = process_data(
     train, categorical_features=cat_features, label="salary", training=True
 )
