@@ -1,4 +1,3 @@
-from pathlib import Path
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from src.ml.data import process_data
@@ -19,6 +18,7 @@ X_train, y_train, encoder, lb = process_data(
 X_test, y_test, _, _ = process_data(
     test, categorical_features=cat_features, label="salary", training=False, encoder=encoder, lb=lb,)
 
+
 def test_train_model():
     rf_model = RandomForestClassifier()
     trained_model = train_model(rf_model, X_train, y_train)
@@ -35,6 +35,7 @@ def test_compute_model_metrics():
     assert 0 <= precision <= 1, 'Precision value are incorrect'
     assert 0 <= recall <= 1, 'Recall value are incorrect'
     assert 0 <= fbeta <= 1, 'Fbeta value are incorrect'
+
 
 def test_inference():
 
