@@ -10,11 +10,12 @@ from src.ml.data import process_data
 from src.ml.model import inference
 from config import path, cat_features_api
 
-model_path = Path(path/'models')#
+model_path = Path(path/'models')
 encoder = load(model_path.joinpath('encoder.joblib'))
 model = load(model_path / 'random_forest.joblib')
 
 app = FastAPI()
+
 
 @app.get("/")
 async def say_hello():
@@ -43,6 +44,27 @@ class InputData(BaseModel):
     hours_per_week: int = Field(None, alias='hours-per-week')
     native_country: str = Field(None, alias='native-country')
 
+    class Config:
+        schema_extra = {
+            "example": {
+                'age': 38,
+                'workclass': 'Private',
+                'fnlgt': 215646,
+                'education': 'HS-grad',
+                'education-num': 9,
+                'marital-status': 'Divorced',
+                'occupation': 'Handlers-cleaners',
+                'relationship': 'Not-in-family',
+                'race': 'White',
+                'sex': 'Male',
+                'capital-gain': 0,
+                'capital-loss': 0,
+                'hours-per-week': 40,
+                'native-country': 'United-States'
+            }
+        }
+
+
 @app.post("/prediction/")
 async def create_item(data: InputData):
     '''
@@ -54,7 +76,10 @@ async def create_item(data: InputData):
     vals = np.array(list(data.values()))
     vals = vals.reshape((1, 14))
     df = pd.DataFrame(columns=data.keys(), data=vals)
-    pred_data, _, _, _ = process_data(df, categorical_features=cat_features_api, training=False, encoder=encoder)
+    pred_data, _, _, _ = process_data(df,
+                                      categorical_features=cat_features_api,
+                                      training=False,
+                                      encoder=encoder)
     prediction = inference(model, pred_data)
     prediction = int(prediction)
     return {'prediction:': prediction}
