@@ -41,13 +41,15 @@ def test_say_hello():
         f'Status code {request.status_code} returned instead of 200'
 
 
-def test_create_item():
+def test_prediction_zero():
     request = client.post("/prediction/", json=predict_zero)
     assert request.status_code == 200, \
         f'Status code {request.status_code} returned instead of 200'
     assert request.content == b'{"prediction:":0}', \
         f'{request.content} returned instead of 0'
 
+
+def test_prediction_one():
     request = client.post("/prediction/", json=predict_one)
     assert request.status_code == 200, \
         f'Status code {request.status_code} returned instead of 200'
