@@ -1,9 +1,9 @@
-import setuptools
+from setuptools import setup, find_packages
 
-setuptools.setup(
+setup(
     name="starter",
     version="0.0.0",
     description="Starter code.",
     author="Student",
-    packages=['src']  # 'ml']
+    packages=find_packages()  # ['src']  # 'ml']
 )
