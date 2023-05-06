@@ -22,3 +22,4 @@ response = requests.post(url, json=body)
 assert response.status_code, f'invalid status of {response.status_code}'
 
 print('Response is: ', response.content)
+print('Status Code is: ', response.status_code)
