@@ -1,7 +1,8 @@
+from pathlib import Path
+
 import pandas as pd
-import numpy as np
 from sklearn.metrics import fbeta_score, precision_score, recall_score
-from src.ml.data import process_data
+from .data import process_data
 
 
 # Optional: implement hyperparameter tuning.
@@ -27,7 +28,8 @@ def train_model(model, X_train, y_train):
 
 def compute_model_metrics(y, preds):
     """
-    Validates the trained machine learning model using precision, recall, and F1.
+    Validates the trained machine learning model using precision,
+    recall, and F1.
 
     Inputs
     ------
@@ -64,11 +66,16 @@ def inference(model, X):
     return model.predict(X)
 
 
-def assess_data_slices(test: pd.DataFrame, encoder, lb, model, cat_features: list)->pd.DataFrame:
+def assess_data_slices(test: pd.DataFrame, encoder, lb, model,
+                       cat_features: list,
+                       save_slice: bool = True) -> pd.DataFrame:
     """
-    Assess model performance of different slices of the test set and return a dataframe of results. Test set is
-    required to be slices prior to processing and prediction. This function will go through all the unique values of
-    the cat_features specified in the cat_features parameters and return scores for each of them.
+    Assess model performance of different slices of the test set and return a
+    dataframe of results. Test set is required to be slices prior to processing
+    and prediction. This function will go through all the unique values of
+    the cat_features specified in the cat_features parameters and return scores
+    for each of them.
+    :param save_slice: if True, saves the slice as a txt file in data folder
     :param test:pd.DataFrame - test set, including data and labels
     :param encoder: pre-trained encoder for the data
     :param lb: pretrained label binarizer for the labels
@@ -87,7 +94,8 @@ def assess_data_slices(test: pd.DataFrame, encoder, lb, model, cat_features: lis
         for sub_cat in test[cat].unique():
             # Proces the test data with the process_data function.
             X_test, y_test, _, _ = process_data(
-                test, categorical_features=cat_features, label="salary", training=False, encoder=encoder, lb=lb,
+                test, categorical_features=cat_features, label="salary",
+                training=False, encoder=encoder, lb=lb,
             )
 
             preds = inference(model, X_test)
@@ -99,9 +107,15 @@ def assess_data_slices(test: pd.DataFrame, encoder, lb, model, cat_features: lis
             recall_list.append(recall)
             fbeta_list.append(fbeta)
 
-    slice_data = {'category': cat_list, 'sub_Category': sub_cat_list, 'precision': precision_list,
+    slice_data = {'category': cat_list, 'sub_Category': sub_cat_list,
+                  'precision': precision_list,
                   'recall': recall_list, 'fbeta': fbeta_list}
 
     slice_df = pd.DataFrame(slice_data)
+
+    path = Path.cwd().parent / 'data'
+
+    if save_slice:
+        slice_df.to_csv(path / 'slice_data.txt', index=False, sep='\t')
 
     return slice_df

@@ -1,5 +1,7 @@
 # Script to train machine learning model.
-# from pathlib import Path
+from pathlib import Path
+import argparse
+
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 import pandas as pd
@@ -7,25 +9,24 @@ from joblib import dump
 from ml.data import process_data
 from ml.model import train_model, compute_model_metrics, \
     inference, assess_data_slices
-from config import path, cat_features
 
-# path = Path.cwd().parent
-# cat_features = [
-#     "workclass",
-#     "education",
-#     "marital-status",
-#     "occupation",
-#     "relationship",
-#     "race",
-#     "sex",
-#     "native-country",
-# ]
+path = Path.cwd().parent
 
-# load data and split
+cat_features = [
+    "workclass",
+    "education",
+    "marital-status",
+    "occupation",
+    "relationship",
+    "race",
+    "sex",
+    "native-country",
+]
 
-if __name__ == '__main__':
+
+def go(args):
     data = pd.read_csv(path / 'data' / 'census.csv')
-    train, test = train_test_split(data, test_size=0.20)
+    train, test = train_test_split(data, test_size=args.test_size)
 
     X_train, y_train, encoder, lb = process_data(
         train, categorical_features=cat_features, label="salary", training=True
@@ -46,8 +47,36 @@ if __name__ == '__main__':
 
     precision, recall, fbeta = compute_model_metrics(y_test, preds)
 
-    # save the model and encoder
-    dump(trained_model, path / 'models' / 'random_forest.joblib')
-    dump(encoder, path / 'models' / 'encoder.joblib')
+    if args.save_artifacts:
+        dump(trained_model, path / 'models' / 'random_forest.joblib')
+        dump(encoder, path / 'models' / 'encoder.joblib')
 
-    slice_data = assess_data_slices(test, encoder, lb, rf, cat_features)
+    # assess performance on slices and save to data folder
+    assess_data_slices(test, encoder, lb, rf, cat_features, save_slice=True)
+
+
+if __name__ == "__main__":
+
+    parser = argparse.ArgumentParser(description="Train the model and encoder "
+                                                 "against training dataset "
+                                                 "and test on test set")
+
+    parser.add_argument(
+        "--test_size",
+        type=float,
+        help="Percentage of dataset for testing, as a decimal",
+        default=0.2,
+        required=False
+    )
+
+    parser.add_argument(
+        "--save_artifacts",
+        type=bool,
+        help="Whether to save the trained model and encoder",
+        default=False,
+        required=False
+    )
+
+    args = parser.parse_args()
+
+    go(args)
