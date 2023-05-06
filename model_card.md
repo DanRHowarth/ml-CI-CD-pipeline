@@ -9,10 +9,10 @@ individual. The users for this model could be employment agencies, recruiters, H
 or social scientists undertaking research.
 
 ## Training Data
-The data is 1994 Census data, avialbe online here - https://archive.ics.uci.edu/ml/datasets/census+income
+The data is 1994 Census data, available online here - https://archive.ics.uci.edu/ml/datasets/census+income
 
 ## Evaluation Data
-The model was evaluated on an unseen test set of the original data. It was evaluated on the full dataset, and on slices
+The model was evaluated on an unseen test set, composed of 20% of the original data. It was also evaluated on slices
 of the data to detect for bias. 
 
 ## Metrics
